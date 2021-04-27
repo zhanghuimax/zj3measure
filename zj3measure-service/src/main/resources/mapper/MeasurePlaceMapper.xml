@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.pinming.microservice.measure.biz.mapper.MeasurePlaceMapper">
+
+    <select id="listMeasurePlace" resultType="cn.pinming.microservice.measure.biz.vo.MeasurePlaceVO">
+        select *
+        from d_measure_place d
+        where d.company_id = #{companyId}
+        and d.project_id = #{projectId}
+        and d.is_delete = 1
+        order by d.gmt_create desc
+    </select>
+
+    <select id="getMeasurePlaceByName" resultType="cn.pinming.microservice.measure.biz.vo.MeasurePlaceVO">
+        select a.place_id as placeId,
+        a.place_one as placeOne,
+        a.place_two as placeTwo,
+        a.place_three as placeThree,
+        a.place_four as placeFour,
+        a.place_five as placeFive,
+        a.drawing_name as drawingName,
+        b.file_uuid as fileUuid
+        from d_measure_place a
+        left join d_measure_drawing b
+        on a.drawing_name = b.name
+        where a.company_id = #{companyId}
+        and a.project_id = #{projectId}
+        and a.place_one = #{form.placeOne}
+        and a.place_two = #{form.placeTwo}
+        and a.place_three = #{form.placeThree}
+        and a.place_four = #{form.placeFour}
+        and a.place_five = #{form.placeFive}
+        <if test="form.drawingName != null and form.drawingName != ''">
+            and a.drawing_name = #{form.drawingName}
+        </if>
+        and a.is_delete = 1
+        and b.is_delete = 1
+    </select>
+
+</mapper>

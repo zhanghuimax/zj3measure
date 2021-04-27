@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.pinming.microservice.measure.biz.mapper.MeasureTaskMapper">
+
+    <select id="findMeasureTaskList" resultType="cn.pinming.microservice.measure.biz.dto.MeasureTaskDTO">
+        select
+        a.qualified_points as qualifiedPoints,
+        a.project_name as projectName,
+        a.task_id as taskId,
+        a.task_name as taskName,
+        a.task_no as taskNo,
+        a.member_id as memberId,
+        a.member_name as memberName,
+        a.type_id as typeId,
+        d.dict_value as typeName,
+        a.place_id as placeId,
+        a.place_name as placeName,
+        a.status as status,
+        a.pass_rate as passRate,
+        a.current_points as currentPoints,
+        a.total_points as totalPoints,
+        a.check_time as checkTime,
+        a.check_name as checkName,
+        a.check_type as checkType,
+        a.check_item as checkItem,
+        a.gmt_create as gmtCreate,
+        a.template_name as templateName,
+        e.component_name as componentName,
+        e.design_strength as designStrength,
+        a.progress as measureProgress
+        from d_measure_task a
+        left join s_dict d on a.type_id = d.dict_id
+        left join d_measure_task_ext_rebound e on a.task_id = e.task_id
+        where a.company_id = #{companyId}
+        and a.project_id = #{projectId}
+        <if test="taskNo != null and taskNo !='' " >
+            and a.task_no like concat('%', #{taskNo},'%')
+        </if>
+        <if test="placeId != null and placeId !='' " >
+            and a.place_id =  #{placeId}
+        </if>
+        <if test="taskName != null and taskName !='' " >
+            and a.task_name like concat('%', #{taskName},'%')
+        </if>
+        <if test="memberId != null" >
+            and a.member_id = #{memberId}
+        </if>
+        <if test="typeId != null" >
+            and a.type_id = #{typeId}
+        </if>
+        <if test="status != null" >
+            and a.status = #{status}
+        </if>
+        <if test="startPassRate != null" >
+            and a.pass_rate <![CDATA[ >= ]]> #{startPassRate}
+        </if>
+        <if test="endPassRate != null" >
+            and a.pass_rate <![CDATA[ <= ]]> #{endPassRate}
+        </if>
+        <if test="startTime != null" >
+            and a.gmt_create <![CDATA[ >= ]]> #{startTime}
+        </if>
+        <if test="endTime != null" >
+            and a.gmt_create <![CDATA[ <= ]]> #{endTime}
+        </if>
+        and a.is_delete = 1
+        order by
+        <if test="orderName != null and orderName != ''" >
+            ${orderName}  ${orderType},
+        </if>
+        a.gmt_create desc
+    </select>
+
+</mapper>

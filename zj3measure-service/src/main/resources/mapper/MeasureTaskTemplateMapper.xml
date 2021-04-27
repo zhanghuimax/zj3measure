@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.pinming.microservice.measure.biz.mapper.MeasureTaskTemplateMapper">
+    <!--实测指标列表-->
+    <select id="selectTemplateList" resultType="cn.pinming.microservice.measure.biz.dto.TaskTemplateDTO">
+        select
+        t.template_id as templateId,
+        t.company_id as companyId,
+        t.one_name as oneName,
+        t.two_name as twoName,
+        t.org_name as orgName,
+        t.type_id as typeId,
+        t.check_item_count as checkItemCount,
+        t.measure_position_count as measurePositionCount,
+        t.create_id as createId,
+        t.modify_id as modifyId,
+        t.gmt_create as gmtCreate,
+        t.gmt_modify as gmtModify,
+        t.enabled as enabled
+        from d_measure_task_template t
+        where t.company_id = #{query.companyId}
+        <if test="query.templateName !=null and query.templateName !=''">
+            and CONCAT(t.one_name,t.two_name) like concat('%', #{query.templateName},'%')
+        </if>
+        and t.is_delete = 1
+        order by t.gmt_create desc
+    </select>
+
+
+</mapper>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.pinming.microservice.measure.biz.mapper.MeasureItemMapper">
+
+
+    <select id="selectItemList" resultType="cn.pinming.microservice.measure.biz.vo.MeasureItemVO">
+        select
+        item_id as itemId,
+        template_id as templateId,
+        type_id as typeId,
+        inspect_method_describe as inspectMethodDescribe,
+        cite_norm_describe as citeNormDescribe,
+        measure_area_count as measureAreaCount,
+        area_point_count as areaPointCount,
+        is_forbidden as isForbidden
+        from d_measure_item
+        where
+        company_id = #{query.companyId}
+        and template_id = #{query.templateId}
+        and is_delete = 1
+        order by gmt_create
+    </select>
+</mapper>
